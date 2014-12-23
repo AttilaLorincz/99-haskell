@@ -1,0 +1,36 @@
+name:                io-problems
+version:             1.0
+synopsis:            IO Problems
+homepage:            https://github.com/mkovacs/haskell-dojo
+author:              Mate J Kovacs
+maintainer:          mkovaxx@gmail.com
+build-type:          Simple
+cabal-version:       >=1.10
+
+executable twice
+  default-language:  Haskell2010
+  build-depends:     base ==4.*
+  hs-source-dirs:    src/Twice
+  main-is:           Main.hs
+
+test-suite twice-test
+  default-language:  Haskell2010
+  build-depends:     base ==4.*
+                   , QuickCheck >=2.7 && <3
+  type:              exitcode-stdio-1.0
+  hs-source-dirs:    src/Twice
+  main-is:           Test.hs
+
+executable times
+  default-language:  Haskell2010
+  build-depends:     base ==4.*
+  hs-source-dirs:    src/Times
+  main-is:           Main.hs
+
+test-suite times-test
+  default-language:  Haskell2010
+  build-depends:     base ==4.*
+                   , QuickCheck >=2.7 && <3
+  type:              exitcode-stdio-1.0
+  hs-source-dirs:    src/Times
+  main-is:           Test.hs
