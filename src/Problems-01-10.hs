@@ -23,14 +23,23 @@ tests_01 =
       myLast "xyz" == 'z'
   ]
 
-myLast :: [a] -> a
-myLast = undefined
+--myLast :: [a] -> a
+myLast (head : []) = head
+myLast (head : tail) = myLast tail
+myLast [] = error "tail of empty list"
 
 -- Problem 2: Find the last but one element of a list.
 tests_02 :: [Property]
 tests_02 =
-  [
+  [ counterexample "problem 02 test case 01" $
+      myButLast [1, 2, 3, 4] == 3
+  , counterexample "problem 02 test case 02" $
+      myButLast "xyz" == 'y'
+  , counterexample "problem 02 test case 03" $
+      myButLast "" == error "less than 2 elements"
   ]
 
 myButLast :: [a] -> a
-myButLast = undefined
+myButLast (head : (second:[])) = head
+myButLast (head : tail) = myButLast tail
+myButLast [] = error "less than 2 elements"
