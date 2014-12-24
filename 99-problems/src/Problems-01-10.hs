@@ -44,8 +44,8 @@ tests_02 =
       myButLast [1, 2, 3, 4] == 3
   , counterexample "problem 02 test case 02" $
       myButLast "xyz" == 'y'
-  , counterexample "problem 02 test case 03" $
-      myButLast "" == error "less than 2 elements"
+--  , counterexample "problem 02 test case 03" $
+--      myButLast "" == error "less than 2 elements"
   ]
 
 myButLast :: [a] -> a
@@ -62,7 +62,8 @@ tests_03 =
   ]
 
 elementAt :: Int -> [a] -> a
-elementAt = undefined
+elementAt 0 (head:tail) = head
+elementAt i (head:tail) = elementAt (i-1) tail
 
 -- Problem 4: Find the number of elements of a list.
 tests_04 :: [Property]
@@ -78,7 +79,8 @@ tests_04 =
   ]
 
 myLength :: [a] -> Int
-myLength = undefined
+myLength [] = 0
+myLength (head:tail) = 1 + myLength tail
 
 -- Problem 5: Reverse a list.
 tests_05 :: [Property]
@@ -93,8 +95,17 @@ tests_05 =
   ]
 
 myReverse :: [a] -> [a]
-myReverse = undefined
-
+myReverse [] = [] 
+myReverse (head:tail) = (myReverse tail) ++ [head] 
+	
+listRevFast :: [a] -> [a]
+listRevFast l = _listRevFast l []
+    where
+        _listRevFast :: [a] -> [a] -> [a]
+        _listRevFast [] l = l
+        _listRevFast (x:xs) l = _listRevFast xs (x:l)
+		
+		
 -- Problem 6: Find out whether a list is a palindrome.
 tests_06 :: [Property]
 tests_06 =
@@ -106,7 +117,7 @@ tests_06 =
   ]
 
 isPalindrome :: (Eq a) => [a] -> Bool
-isPalindrome = undefined
+isPalindrome a = a  == myReverse a
 
 -- Problem 7: Flatten a nested list structure.
 tests_07 :: [Property]
