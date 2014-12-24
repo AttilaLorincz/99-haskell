@@ -44,8 +44,8 @@ tests_02 =
       myButLast [1, 2, 3, 4] == 3
   , counterexample "problem 02 test case 02" $
       myButLast "xyz" == 'y'
---  , counterexample "problem 02 test case 03" $
---      myButLast "" == error "less than 2 elements"
+  , counterexample "problem 02 test case 03" $
+      myButLast "" == error "less than 2 elements"
   ]
 
 myButLast :: [a] -> a
