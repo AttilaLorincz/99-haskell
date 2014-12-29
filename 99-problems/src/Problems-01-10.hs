@@ -135,7 +135,11 @@ tests_07 =
   ]
 
 flatten :: NestedList a -> [a]
-flatten = undefined
+flatten  = myReverse . flattenAcc [] 
+  where
+  flattenAcc acc (List []) = acc
+  flattenAcc acc (Elem x)  = x:acc
+  flattenAcc acc (List (x:xs)) = flattenAcc (flattenAcc acc x) (List xs)
 
 data NestedList a
   = Elem a
@@ -170,7 +174,10 @@ tests_08 =
   ]
 
 compress :: (Eq a) => [a] -> [a]
-compress = undefined
+compress [] = []
+compress (x:xs) 
+			| (xs /= [] && x == head xs) = compress xs
+			| otherwise =  x: compress xs 
 
 intRunsFromLens :: [Positive Int] -> [(Positive Int, Int)]
 intRunsFromLens = flip zip [1..]
@@ -190,7 +197,14 @@ tests_09 =
   ]
 
 pack :: (Eq a) => [a] -> [[a]]
-pack = undefined
+pack [] = []	
+pack (x:xs) = myReverse $ packl (x:xs) [] where
+	packl :: (Eq a) => [a] -> [[a]] -> [[a]]
+	packl [] acc = acc 
+	packl (x:xs) acc 
+			| (acc /= [] && x == head (head acc)) = packl xs $ (x : (head acc )) : (tail acc)
+			| otherwise =  packl xs $ [x] : acc 
+
 
 -- Problem 10: Run-length encoding of a list.
 -- Consecutive duplicates of elements are encoded as pairs (N, E)
@@ -205,4 +219,4 @@ tests_10 =
   ]
 
 encode :: (Eq a) => [a] -> [(Int, a)]
-encode = undefined
+encode l = [(length i, head i) | i<- pack l ]
