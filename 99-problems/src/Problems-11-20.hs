@@ -133,7 +133,7 @@ tests_17 =
   ]
 
 split :: Int -> [a] -> ([a], [a])
-split = undefined
+split n loa = (take n loa, drop n loa) 
 
 -- Problem 18: Extract a slice from a list.
 tests_18 :: [Property]
@@ -143,7 +143,7 @@ tests_18 =
   ]
 
 slice :: Int -> Int -> [a] -> [a]
-slice = undefined
+slice from n = drop from . take n
 
 -- Problem 19: Rotate a list N places to the left.
 tests_19 :: [Property]
@@ -155,7 +155,11 @@ tests_19 =
   ]
 
 rotate :: Int -> [a] -> [a]
-rotate = undefined
+rotate n loa = do 
+	let l = length loa
+	let m = if n < 0 then l+n else n
+	rotated <- (drop m loa) ++ (take m loa)
+	return rotated
 
 -- Problem 20: Remove the Kth element from a list.
 tests_20 :: [Property]
@@ -165,4 +169,4 @@ tests_20 =
   ]
 
 removeAt :: Int -> [a] -> (a, [a])
-removeAt = undefined
+removeAt k = (\(before, afterAndItem) -> (head afterAndItem, before ++ tail afterAndItem)) . splitAt (k)
