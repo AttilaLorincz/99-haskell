@@ -55,7 +55,9 @@ tests_22 =
   ]
 
 range :: Int -> Int -> [Int]
-range = undefined
+range x y
+	| x == y = [x]
+	| otherwise = [x] ++ (range (x+1) y)
 
 -- Problem 23: Extract a given number of randomly selected elements from a list.
 tests_23 :: [Property]
