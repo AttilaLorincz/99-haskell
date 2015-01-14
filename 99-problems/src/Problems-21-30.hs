@@ -37,7 +37,7 @@ tests_21 =
   ]
 
 insertAt :: Int -> a -> [a] -> [a]
-insertAt = undefined
+insertAt k a = (\(before, kAndAfter) -> (before ++ [a] ++ kAndAfter)) . splitAt (k-1)
 
 -- Problem 22: Create a list containing all integers within a given range.
 tests_22 :: [Property]
