@@ -33,7 +33,7 @@ linPartsFromUtf8Chunks' domx rngx = \case
   (chunk:chunks) ->
     let
       len = length chunk
-      increment = utf8SeqLen . head $ chunk
+      increment = utf8SeqLen chunk
       domx' = domx + len
       rngx' = rngx + len `div` increment
     in (domx, (rngx, increment)) : linPartsFromUtf8Chunks' domx' rngx' chunks
@@ -44,22 +44,29 @@ chunkUtf8Seqs :: [[Word8]] -> [[Word8]]
 chunkUtf8Seqs
   = map (\chunks -> concatMap snd chunks)
   . groupBy (\x y -> fst x == fst y)
-  . map (\chunk -> (utf8SeqLen . head $ chunk, chunk))
+  . map (\chunk -> (utf8SeqLen chunk, chunk))
 
 -- separates UTF-8 sequences
 separateUtf8Seqs :: [Word8] -> [[Word8]]
 separateUtf8Seqs = \case
-  (bytes@(c:cs)) ->
+  [] -> []
+  bytes ->
     let
-      len = utf8SeqLen c
+      len = utf8SeqLen bytes
       (bite, rest) = splitAt len bytes
     in bite : separateUtf8Seqs rest
-  [] -> []
 
 -- determines the length of the UTF-8 sequence based on its first byte
-utf8SeqLen :: Word8 -> Int
-utf8SeqLen c
+utf8SeqLen :: [Word8] -> Int
+utf8SeqLen = \case
+  (c:_) -> utf8CharLen c
+  [] -> 0
+
+utf8CharLen :: Word8 -> Int
+utf8CharLen c
   | c <= 0x7F = 1
   | c <= 0xDF = 2
   | c <= 0xEF = 3
-  | otherwise = 4
+  | c <= 0xF7 = 4
+  | c <= 0xFB = 5
+  | otherwise = 6
