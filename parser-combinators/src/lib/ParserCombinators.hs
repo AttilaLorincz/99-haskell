@@ -2,6 +2,8 @@
 
 -}
 
+module ParserCombinators where
+
 type Parser a = String -> [(a, String)]
 
 runP :: Parser a -> String -> [a]
