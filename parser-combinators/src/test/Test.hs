@@ -14,4 +14,11 @@ main = do
   unless (isSuccess result) exitFailure
 
 tests = join
-  []
+  [ tests_01
+  ]
+
+tests_01 :: [Property]
+tests_01 =
+  [ counterexample "test case 01" $
+      True
+  ]

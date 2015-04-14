@@ -25,8 +25,8 @@ anyChar s = case s of
   (x:xs) -> [(x, xs)]
   [] -> []
 
-alt :: Parser a -> Parser a -> Parser a
-alt p q s = p s ++ q s
+pAlt :: Parser a -> Parser a -> Parser a
+pAlt p q s = p s ++ q s
 
 pMap :: (a -> b) -> Parser a -> Parser b
 pMap f p s = [(f x, r) | (x, r) <- p s]
@@ -40,11 +40,11 @@ pApp p q s =
 
 string :: String -> Parser String
 string txt = case txt of
-  (x:xs) -> pmap (:) (char x) `app` string xs
+  (x:xs) -> pMap (:) (char x) `pApp` string xs
   "" -> empty ""
 
 many :: Parser a -> Parser [a]
-many p = (pmap (:) p `app` many p) `alt` empty []
+many p = (pMap (:) p `pApp` many p) `pAlt` empty []
 
 pZip :: Parser a -> Parser b -> Parser (a, b)
-pZip p q = pmap (,) p `app` q
+pZip p q = pMap (,) p `pApp` q
