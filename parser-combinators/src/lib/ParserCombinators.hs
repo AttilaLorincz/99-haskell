@@ -78,12 +78,12 @@ app p q s =
   , (x, r') <- q r
   ]
 
-{- The many combinator takes a parser and builds another parser that matches
+{- The list combinator takes a parser and builds another parser that matches
 any number (including zero) of repetitions of what the original one matched,
 yielding a list.
 -}
 list :: Parser a -> Parser [a]
-list p = (mapP (:) p `app` many p) `alt` (mapP (const []) empty)
+list p = (mapP (:) p `app` list p) `alt` (mapP (const []) empty)
 
 {- The pair parser takes two parsers and builds another parser that yields
 the results of running both of them in sequence as a pair.
