@@ -25,14 +25,6 @@ It always succeeds, consuming no input.
 empty :: Parser ()
 empty s = [((), s)]
 
-{- The char function constructs a parser that matches (and yields)
-the given Char, and fails when the input doesn't start with that.
--}
-char :: Char -> Parser Char
-char c s = case s of
-  (x:xs) -> if x == c then [(x, xs)] else []
-  [] -> []
-
 {- The anyChar parser matches (and yields) any Char.
 It can only fail when the input String is empty.
 -}
@@ -70,30 +62,12 @@ app p q s =
   , (x, r') <- q r
   ]
 
-{- The list combinator takes a parser and builds another parser that matches
-any number (including zero) of repetitions of what the original one matched,
-yielding a list.
+{- The filterP combinator takes a predicate and a parser, and builds another
+parser that yields results of the original which also satisfy the predicate.
 -}
-list :: Parser a -> Parser [a]
-list p = (mapP (:) p `app` list p) `alt` (mapP (const []) empty)
-
-{- The pair parser takes two parsers and builds another parser that yields
-the results of running both of them in sequence as a pair.
--}
-pair :: Parser a -> Parser b -> Parser (a, b)
-pair p q = mapP (,) p `app` q
-
--- COMPOSITE PARSERS
-
-{- The string function constructs a parser that matches (and yields)
-the given String, and fails when the input doesn't start with that.
--}
-string :: String -> Parser String
-string txt = case txt of
-  (x:xs) -> mapP (:) (char x) `app` string xs
-  "" -> mapP (const []) empty
-
-{- The anyString function constructs a parser that matches any String.
--}
-anyString :: Parser String
-anyString = list anyChar
+filterP :: (a -> Bool) -> Parser a -> Parser a
+filterP f p s =
+  [ (x, r)
+  | (x, r) <- p s
+  , f x
+  ]
