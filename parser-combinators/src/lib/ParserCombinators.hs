@@ -1,8 +1,8 @@
 module ParserCombinators where
 
-{- A Parser t is a function that takes input of type String and yields a pair,
+{- A Parser t is a function that takes input of type String and returns a pair,
 containing some result of type t and the leftover of type String. To be able to
-model ambiguity, it actually yields a list of such pairs. The empty list
+model ambiguity, it actually returns a list of such pairs. The empty list
 represents failure.
 -}
 type Parser t = String -> [(t, String)]
