@@ -12,10 +12,7 @@ The runP takes a parser and an input String, and returns the
 list of results from successful parses.
 -}
 runP :: Parser a -> String -> [a]
-runP p s =
-  [ x
-  | (x, "") <- p s
-  ]
+runP = undefined
 
 -- ATOMIC PARSERS --
 
@@ -23,15 +20,13 @@ runP p s =
 It always succeeds, consuming no input.
 -}
 empty :: Parser ()
-empty s = [((), s)]
+empty = undefined
 
 {- The anyChar parser matches (and yields) any Char.
 It can only fail when the input String is empty.
 -}
 anyChar :: Parser Char
-anyChar s = case s of
-  (x:xs) -> [(x, xs)]
-  [] -> []
+anyChar = undefined
 
 -- COMBINATORS --
 
@@ -43,31 +38,23 @@ They are higher-order functions, because parsers are functions themselves.
 and builds a parser which yields the results of p sent through f.
 -}
 mapP :: (a -> b) -> Parser a -> Parser b
-mapP f p s = [(f x, r) | (x, r) <- p s]
+mapP = undefined
 
 {- The alt combinator takes two parsers, and builds a parser
 that yields a result whenever any of the two parsers does.
 -}
 alt :: Parser a -> Parser a -> Parser a
-alt p q s = p s ++ q s
+alt = undefined
 
 {- The app combinator takes a parser that yields a function and
 a parser that yields a value, and builds a new parser that yields
 the result of the function applied to the value.
 -}
 app :: Parser (a -> b) -> Parser a -> Parser b
-app p q s =
-  [ (f x, r')
-  | (f, r) <- p s
-  , (x, r') <- q r
-  ]
+app = undefined
 
 {- The filterP combinator takes a predicate and a parser, and builds another
 parser that yields results of the original which also satisfy the predicate.
 -}
 filterP :: (a -> Bool) -> Parser a -> Parser a
-filterP f p s =
-  [ (x, r)
-  | (x, r) <- p s
-  , f x
-  ]
+filterP = undefined
