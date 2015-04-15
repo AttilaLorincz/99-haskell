@@ -8,8 +8,8 @@ represents failure.
 type Parser t = String -> [(t, String)]
 
 {- We call a parse successful when the leftover String is empty.
-The following function, runP, takes a parser and an input String,
-and yields the list of results from successful parses.
+The runP takes a parser and an input String, and returns the
+list of results from successful parses.
 -}
 runP :: Parser a -> String -> [a]
 runP p s =
