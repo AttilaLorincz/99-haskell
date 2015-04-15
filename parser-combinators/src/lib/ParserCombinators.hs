@@ -17,7 +17,7 @@ runP p s =
   | (x, "") <- p s
   ]
 
--- PARSERS --
+-- ATOMIC PARSERS --
 
 {- The empty parser matches the empty String "" and yields ().
 It always succeeds, consuming no input.
@@ -40,15 +40,6 @@ anyChar :: Parser Char
 anyChar s = case s of
   (x:xs) -> [(x, xs)]
   [] -> []
-
-{- The string function constructs a parser that matches (and yields)
-the given String, and fails when the input doesn't start with that.
-HINT: This parser can be built from the ones above with the combinators below.
--}
-string :: String -> Parser String
-string txt = case txt of
-  (x:xs) -> mapP (:) (char x) `app` string xs
-  "" -> mapP (const []) empty
 
 -- COMBINATORS --
 
@@ -91,3 +82,18 @@ the results of running both of them in sequence as a pair.
 -}
 pair :: Parser a -> Parser b -> Parser (a, b)
 pair p q = mapP (,) p `app` q
+
+-- COMPOSITE PARSERS
+
+{- The string function constructs a parser that matches (and yields)
+the given String, and fails when the input doesn't start with that.
+-}
+string :: String -> Parser String
+string txt = case txt of
+  (x:xs) -> mapP (:) (char x) `app` string xs
+  "" -> mapP (const []) empty
+
+{- The anyString function constructs a parser that matches any String.
+-}
+anyString :: Parser String
+anyString = list anyChar
