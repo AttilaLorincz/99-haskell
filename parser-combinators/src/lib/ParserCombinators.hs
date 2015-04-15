@@ -43,6 +43,7 @@ anyChar s = case s of
 
 {- The string function constructs a parser that matches (and yields)
 the given String, and fails when the input doesn't start with that.
+HINT: This parser can be built from the ones above with the combinators below.
 -}
 string :: String -> Parser String
 string txt = case txt of
