@@ -9,34 +9,42 @@ data Expr
   | SubStr Expr Expr Expr
   | Len Expr
   | Con Expr Expr
-  | Eq Expr Expr
+  | Equals Expr Expr
   | If Expr Expr Expr
   deriving (Show, Eq)
 
-eval :: Expr -> Maybe Expr
+data Result
+  = IntRes Int
+  | StrRes String
+  | BoolRes Bool
+  | TypeError
+  deriving (Show, Eq)
+
+eval :: Expr -> Result
+eval (IntLit i) = IntRes i
+eval (StrLit s) = StrRes s
+eval (BoolLit b) = BoolRes b
 eval (Add x y) = case (eval x, eval y) of
-  (Just (IntLit x), Just (IntLit y)) -> Just . IntLit $ x + y
-  _ -> Nothing
+  (IntRes x, IntRes y) -> IntRes $ x + y
+  _ -> TypeError
 eval (Sub x y) = case (eval x, eval y) of
-  (Just (IntLit x), Just (IntLit y)) -> Just . IntLit $ x - y
-  _ -> Nothing
+  (IntRes x, IntRes y) -> IntRes $ x - y
+  _ -> TypeError
 eval (SubStr str lo hi) = case (eval str, eval lo, eval hi) of
-  (Just (StrLit str), Just (IntLit lo), Just (IntLit hi)) ->
-    Just . StrLit . subStr lo hi $ str
-  _ -> Nothing
+  (StrRes str, IntRes lo, IntRes hi) -> StrRes . subStr lo hi $ str
+  _ -> TypeError
 eval (Len s) = case (eval s) of
-  Just (StrLit s) -> Just . IntLit . length $ s
-  _ -> Nothing
+  (StrRes s) -> IntRes . length $ s
+  _ -> TypeError
 eval (Con s t) = case (eval s, eval t) of
-  (Just (StrLit s), Just (StrLit t)) -> Just . StrLit $ s ++ t
-  _ -> Nothing
-eval (Eq x y) = case (eval x, eval y) of
-  (Just (IntLit x), Just (IntLit y)) -> Just . BoolLit $ x == y
-  _ -> Nothing
+  (StrRes s, StrRes t) -> StrRes $ s ++ t
+  _ -> TypeError
+eval (Equals x y) = case (eval x, eval y) of
+  (IntRes x, IntRes y) -> BoolRes $ x == y
+  _ -> TypeError
 eval (If c t e) = case (eval c, eval t, eval e) of
-  (Just (BoolLit c), Just t, Just e) -> Just $ if c then t else e
-  _ -> Nothing
-eval x = Just x
+  (BoolRes c, t, e) -> if c then t else e
+  _ -> TypeError
 
 subStr :: Int -> Int -> String -> String
 subStr lo hi = take (hi - lo) . drop lo

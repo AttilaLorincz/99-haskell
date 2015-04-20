@@ -16,16 +16,15 @@ data Expr a where
   SubStr :: Expr String -> Expr Int -> Expr Int -> Expr String
   Len :: Expr String -> Expr Int
   Con :: Expr String -> Expr String -> Expr String
-  Eq :: Expr Int -> Expr Int -> Expr Bool
+  Equals :: (Eq a) => Expr a -> Expr a -> Expr Bool
   If :: Expr Bool -> Expr a -> Expr a -> Expr a
 
 deriving instance Show (Expr a)
-deriving instance Eq (Expr a)
 
 instance IsString (Expr String) where
   fromString = StrLit
 
-eval :: (Eq a) => Expr a -> a
+eval :: Expr a -> a
 eval = \case
   IntLit int -> int
   StrLit str -> str
@@ -35,7 +34,7 @@ eval = \case
   SubStr str lo hi -> subStr (eval lo) (eval hi) (eval str)
   Len s -> length $ eval s
   Con s t -> eval s ++ eval t
-  Eq x y -> eval x == eval y
+  Equals x y -> eval x == eval y
   If c t e -> if (eval c) then (eval t) else (eval e)
 
 subStr :: Int -> Int -> String -> String
