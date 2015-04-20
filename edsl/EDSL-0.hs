@@ -12,6 +12,7 @@ data Expr
   | Equals Expr Expr
   | If Expr Expr Expr
   deriving (Show, Eq)
+  -- what about invalid expressions? Phantom types anyone?
 
 data Result
   = IntRes Int
@@ -39,8 +40,7 @@ eval (Len s) = case (eval s) of
 eval (Con s t) = case (eval s, eval t) of
   (StrRes s, StrRes t) -> StrRes $ s ++ t
   _ -> TypeError
-eval (Equals x y) = case (eval x, eval y) of
-  (IntRes x, IntRes y) -> BoolRes $ x == y
+eval (Equals x y) = BoolRes $ eval x == eval y
   _ -> TypeError
 eval (If c t e) = case (eval c, eval t, eval e) of
   (BoolRes c, t, e) -> if c then t else e

@@ -13,6 +13,7 @@ data Expr a where
   Con :: Expr String -> Expr String -> Expr String
   Equals :: (Eq b) => Expr b -> Expr b -> Expr Bool
   If :: Expr Bool -> Expr a -> Expr a -> Expr a
+  -- the type checker now prevents invalid expressions
 
 deriving instance Show (Expr a)
 
@@ -27,6 +28,7 @@ eval (Len s) = length $ eval s
 eval (Con s t) = eval s ++ eval t
 eval (Equals x y) = eval x == eval y
 eval (If c t e) = if (eval c) then (eval t) else (eval e)
+-- this looks a little repetitive
 
 subStr :: Int -> Int -> String -> String
 subStr lo hi = take (hi - lo) . drop lo

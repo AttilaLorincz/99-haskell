@@ -18,7 +18,7 @@ data Expr a where
 deriving instance Show (Expr a)
 
 eval :: Expr a -> a
-eval = \case
+eval = \case -- there is an equivalent that uses vanilla 'case'
   IntLit int -> int
   StrLit str -> str
   BoolLit bool -> bool

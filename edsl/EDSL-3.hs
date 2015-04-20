@@ -21,6 +21,7 @@ data Expr a where
 
 deriving instance Show (Expr a)
 
+-- don't forget to enable -XOverloadedStrings in GHCi
 instance IsString (Expr String) where
   fromString = StrLit
 
