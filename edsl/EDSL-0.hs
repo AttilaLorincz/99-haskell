@@ -39,4 +39,4 @@ eval (If c t e) = case (eval c, eval t, eval e) of
 eval x = Just x
 
 subStr :: Int -> Int -> String -> String
-subStr lo hi = drop lo . take (hi - lo)
+subStr lo hi = take (hi - lo) . drop lo

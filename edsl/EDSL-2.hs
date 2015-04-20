@@ -1,5 +1,6 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE StandaloneDeriving #-}
+{-# LANGUAGE LambdaCase #-}
 module EDSL where
 
 data Expr a where
@@ -18,16 +19,17 @@ deriving instance Show (Expr a)
 deriving instance Eq (Expr a)
 
 eval :: (Eq a) => Expr a -> a
-eval (IntLit int) = int
-eval (StrLit str) = str
-eval (BoolLit bool) = bool
-eval (Add x y) = eval x + eval y
-eval (Sub x y) = eval x - eval y
-eval (SubStr str lo hi) = subStr (eval lo) (eval hi) (eval str)
-eval (Len s) = length $ eval s
-eval (Con s t) = eval s ++ eval t
-eval (Eq x y) = eval x == eval y
-eval (If c t e) = if (eval c) then (eval t) else (eval e)
+eval = \case
+  IntLit int -> int
+  StrLit str -> str
+  BoolLit bool -> bool
+  Add x y -> eval x + eval y
+  Sub x y -> eval x - eval y
+  SubStr str lo hi -> subStr (eval lo) (eval hi) (eval str)
+  Len s -> length $ eval s
+  Con s t -> eval s ++ eval t
+  Eq x y -> eval x == eval y
+  If c t e -> if (eval c) then (eval t) else (eval e)
 
 subStr :: Int -> Int -> String -> String
 subStr lo hi = take (hi - lo) . drop lo
