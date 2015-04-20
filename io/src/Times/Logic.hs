@@ -17,4 +17,7 @@ splitWord str =
 
 -- repeat a string N times
 nTimes :: Int -> String -> String
-nTimes n s = undefined
+nTimes n s
+	| n == 0 = ""
+	| n == 1 = s 
+	| otherwise = s ++ (nTimes  (n - 1) s)
