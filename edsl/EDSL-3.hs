@@ -1,0 +1,42 @@
+{-# LANGUAGE GADTs #-}
+{-# LANGUAGE StandaloneDeriving #-}
+{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE FlexibleInstances #-}
+module EDSL where
+
+import Data.String
+
+data Expr a where
+  IntLit :: Int -> Expr Int
+  StrLit :: String -> Expr String
+  BoolLit :: Bool -> Expr Bool
+  Add :: Expr Int -> Expr Int -> Expr Int
+  Sub :: Expr Int -> Expr Int -> Expr Int
+  SubStr :: Expr String -> Expr Int -> Expr Int -> Expr String
+  Len :: Expr String -> Expr Int
+  Con :: Expr String -> Expr String -> Expr String
+  Eq :: Expr Int -> Expr Int -> Expr Bool
+  If :: Expr Bool -> Expr a -> Expr a -> Expr a
+
+deriving instance Show (Expr a)
+deriving instance Eq (Expr a)
+
+instance IsString (Expr String) where
+  fromString = StrLit
+
+eval :: (Eq a) => Expr a -> a
+eval = \case
+  IntLit int -> int
+  StrLit str -> str
+  BoolLit bool -> bool
+  Add x y -> eval x + eval y
+  Sub x y -> eval x - eval y
+  SubStr str lo hi -> subStr (eval lo) (eval hi) (eval str)
+  Len s -> length $ eval s
+  Con s t -> eval s ++ eval t
+  Eq x y -> eval x == eval y
+  If c t e -> if (eval c) then (eval t) else (eval e)
+
+subStr :: Int -> Int -> String -> String
+subStr lo hi = take (hi - lo) . drop lo
