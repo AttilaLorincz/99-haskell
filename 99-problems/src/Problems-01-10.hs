@@ -10,8 +10,11 @@ main :: IO ()
 main = do
   result <- quickCheckResult $ conjoin tests
   unless (isSuccess result) exitFailure
+  resultF <- quickCheckResult $ tests_02fail
+  unless (isSuccess resultF) exitFailure
 
-tests = join
+tests =   
+  join
   [ tests_01
   , tests_02
   , tests_03
@@ -22,7 +25,7 @@ tests = join
   , tests_08
   , tests_09
   , tests_10
-  ]
+  ] 
 
 -- Problem 1: Find the last element of a list.
 tests_01 :: [Property]
@@ -43,10 +46,10 @@ tests_02 =
   [ counterexample "problem 02 test case 01" $
       myButLast [1, 2, 3, 4] == 3
   , counterexample "problem 02 test case 02" $
-      myButLast "xyz" == 'y'
-  , counterexample "problem 02 test case 03" $
-      myButLast "" == error "less than 2 elements"
-  ]
+      myButLast "xyz" == 'y']
+	  
+tests_02fail ::  Property 
+tests_02fail = expectFailure (counterexample "problem 02 test case 03"  $ myButLast "" == ' ') 
 
 myButLast :: [a] -> a
 myButLast (head : (second:[])) = head
