@@ -41,7 +41,6 @@ eval (Con s t) = case (eval s, eval t) of
   (StrRes s, StrRes t) -> StrRes $ s ++ t
   _ -> TypeError
 eval (Equals x y) = BoolRes $ eval x == eval y
-  _ -> TypeError
 eval (If c t e) = case (eval c, eval t, eval e) of
   (BoolRes c, t, e) -> if c then t else e
   _ -> TypeError
