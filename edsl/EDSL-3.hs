@@ -16,7 +16,7 @@ data Expr a where
   SubStr :: Expr String -> Expr Int -> Expr Int -> Expr String
   Len :: Expr String -> Expr Int
   Con :: Expr String -> Expr String -> Expr String
-  Equals :: (Eq a) => Expr a -> Expr a -> Expr Bool
+  Equals :: (Eq b) => Expr b -> Expr b -> Expr Bool
   If :: Expr Bool -> Expr a -> Expr a -> Expr a
 
 deriving instance Show (Expr a)
